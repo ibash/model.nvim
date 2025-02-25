@@ -134,8 +134,12 @@ local function create_prompt_handlers(prompt, seg)
 
   return {
     on_partial = function(partial)
-      completion = completion .. partial
-      seg.add(partial)
+      print(partial)
+
+      if partial ~= nil then
+        completion = completion .. partial
+        seg.add(partial)
+      end
     end,
 
     on_finish = function(complete_text, reason)

@@ -40,6 +40,7 @@ local function split_messages(text)
     local text_ = table.concat(chunk_lines, '\n')
 
     table.insert(messages, {
+      -- TODO(ibash) add type, thinking, signature, and text here
       role = chunk_is_user and 'user' or 'assistant',
       content = chunk_is_user and vim.trim(text_) or text_,
     })
@@ -307,8 +308,10 @@ function M.run_chat(opts)
   ---@type StreamHandlers
   local handlers = {
     on_partial = function(text)
-      seg.add(text)
-      sayer.say(text)
+      if text ~= nil then
+        seg.add(text)
+        sayer.say(text)
+      end
     end,
     on_finish = function(text, reason)
       sayer.finish()

@@ -42,7 +42,8 @@ local M = {
       headers = vim.tbl_extend('force', {
         ['Content-Type'] = 'application/json',
         ['x-api-key'] = util.env('ANTHROPIC_API_KEY'),
-        ['anthropic-beta'] = 'messages-2023-12-15',
+        --['anthropic-beta'] = 'messages-2023-12-15',
+        ['anthropic-beta'] = 'output-128k-2025-02-19',
         ['anthropic-version'] = '2023-06-01',
       }, options.headers or {}),
       body = vim.tbl_deep_extend('force', {
@@ -51,6 +52,10 @@ local M = {
     }, {
       on_message = function(msg)
         local data = util.json.decode(msg.data)
+
+        print(vim.inspect(msg))
+        print(vim.inspect(data))
+        print(msg.event)
 
         if msg.event == 'content_block_delta' then
           consume(data.delta.text)
