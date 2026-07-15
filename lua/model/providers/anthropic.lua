@@ -53,7 +53,12 @@ local M = {
         local data = util.json.decode(msg.data)
 
         if msg.event == 'content_block_delta' then
-          consume(data.delta.text)
+          -- Newer models (e.g. claude-sonnet-5) default to adaptive thinking,
+          -- which streams thinking_delta/signature_delta blocks that have no
+          -- .text field. Only forward actual text deltas.
+          if data.delta.type == 'text_delta' then
+            consume(data.delta.text)
+          end
         elseif msg.event == 'message_delta' then
           util.show(data.usage.output_tokens, 'output tokens')
         elseif msg.event == 'message_stop' then
