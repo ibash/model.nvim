@@ -254,6 +254,23 @@ local closed = {
       })
     end,
   },
+  ['claude-sonnet-5'] = {
+    provider = anthropic,
+    create = input_if_selection,
+    params = {
+      model = 'claude-sonnet-5',
+      -- Sonnet 5 runs adaptive thinking by default (no `thinking` field sent).
+      -- Give max_tokens plenty of room so thinking doesn't crowd out the answer;
+      -- streaming means large values don't risk HTTP timeouts.
+      max_tokens = 16000,
+    },
+    run = function(messages, config)
+      return vim.tbl_deep_extend('force', config.params, {
+        messages = messages,
+        system = config.system,
+      })
+    end,
+  },
   ['claude:cache'] = {
     provider = anthropic,
     create = input_if_selection,
